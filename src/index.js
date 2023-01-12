@@ -21,10 +21,14 @@ module.exports.pitch = function pitch(request) {
     var css = require(${stringifyRequest(this, `!!${request}`)});
     var insertCss = require(${stringifyRequest(this, `!${insertCss}`)});
     var content = typeof css === 'string' ? [[module.id, css, '']] : css;
+    
+    if (typeof content.default !== 'undefined') {
+      content = content.default
+    }
 
-    exports = module.exports = css.locals || {};
+    exports = module.exports = content.locals || {};
     exports._getContent = function() { return content; };
-    exports._getCss = function() { return '' + css; };
+    exports._getCss = function() { return '' + content; };
     exports._insertCss = function(options) { return insertCss(content, options) };
 
     // Hot Module Replacement
@@ -34,7 +38,7 @@ module.exports.pitch = function pitch(request) {
       var removeCss = function() {};
       module.hot.accept(${stringifyRequest(this, `!!${request}`)}, function() {
         css = require(${stringifyRequest(this, `!!${request}`)});
-        content = typeof css === 'string' ? [[module.id, css, '']] : css;
+        content = typeof css === 'string' ? [[module.id, css, '']] : css.default;
         removeCss = insertCss(content, { replace: true });
       });
       module.hot.dispose(function() { removeCss(); });
