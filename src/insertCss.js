@@ -62,6 +62,10 @@ function insertCss(styles, { replace = false, prepend = false, prefix = 's' } = 
     let elem = document.getElementById(id)
     let create = false
 
+    if(elem && typeof elem.dataset.optimized !== 'undefined' && elem.dataset.optimized) {
+      continue // skip optimized styles if they are already rendered on the page
+    }
+
     if (!elem) {
       create = true
 

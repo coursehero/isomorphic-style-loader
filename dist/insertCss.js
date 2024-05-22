@@ -44,6 +44,9 @@ function insertCss(styles, _temp) {
     inserted[id] = 1;
     var elem = document.getElementById(id);
     var create = false;
+    if (elem && typeof elem.dataset.optimized !== 'undefined' && elem.dataset.optimized) {
+      continue;
+    }
     if (!elem) {
       create = true;
       elem = document.createElement('style');
